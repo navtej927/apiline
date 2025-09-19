@@ -3,7 +3,6 @@ import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { MovieDto } from '../common/dto/movie.dto';
-import { SimilarMoviesResponseDto } from '../common/dto/similar-movies.dto';
 
 export interface TMDBSimilarMovie {
   id: number;
@@ -97,6 +96,8 @@ export class SimilarService {
     movieDto.title = tmdbMovie.title;
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
+    movieDto.similar_movie = []; // Initialize empty array
+    movieDto.computedProperty = 'similarMovie'; // Set computed property
     return movieDto;
   }
 
@@ -114,16 +115,20 @@ export class SimilarService {
     movieId: string | number,
     page = 1,
     language?: string,
-  ): Promise<SimilarMoviesResponseDto> {
+  ): Promise<{
+    results: MovieDto[];
+    page: number;
+    total_pages: number;
+    total_results: number;
+  }> {
     const response = await this.getSimilarMovies(movieId, page, language);
-    const movies = this.transformToMovieDtos(response.results);
+    const transformedMovies = this.transformToMovieDtos(response.results);
 
     return {
-      movies,
       page: response.page,
-      totalPages: response.total_pages,
-      totalResults: response.total_results,
-      movieId: typeof movieId === 'string' ? parseInt(movieId, 10) : movieId,
+      results: transformedMovies,
+      total_pages: response.total_pages,
+      total_results: response.total_results,
     };
   }
 }

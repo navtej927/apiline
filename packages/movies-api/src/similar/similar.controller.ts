@@ -7,7 +7,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { SimilarService } from './similar.service';
-import { SimilarMoviesResponseDto } from '../common/dto/similar-movies.dto';
+import { MovieDto } from '../common/dto/movie.dto';
 
 @ApiTags('Similar Movies')
 @Controller('similar')
@@ -36,7 +36,7 @@ export class SimilarController {
   @ApiResponse({
     status: 200,
     description: 'List of similar movies',
-    type: SimilarMoviesResponseDto,
+    type: [MovieDto],
   })
   @ApiResponse({
     status: 400,
@@ -50,7 +50,12 @@ export class SimilarController {
     @Param('movieId') movieId: string,
     @Query('page') page?: string,
     @Query('language') language?: string,
-  ): Promise<SimilarMoviesResponseDto> {
+  ): Promise<{
+    results: MovieDto[];
+    page: number;
+    total_pages: number;
+    total_results: number;
+  }> {
     const p = page ? parseInt(page, 10) : 1;
 
     // Add some delay to simulate expensive processing (similar to your other endpoints)
