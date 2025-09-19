@@ -6,7 +6,14 @@ import { AppService } from './app.service';
 import { SearchModule } from './search/search.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), HttpModule, SearchModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    HttpModule,
+    SearchModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
