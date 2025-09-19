@@ -12,7 +12,7 @@ export interface TMDBMovie {
   backdrop_path: string | null;
   vote_average: number;
   vote_count: number;
-  genre_ids?: number[];
+  genre_ids: number[];
   adult: boolean;
   original_language: string;
   original_title: string;
@@ -50,7 +50,7 @@ export interface TMDBSpokenLanguage {
   name: string;
 }
 
-export interface TMDBMovieDetails {
+export interface TMDBMovieDetailsResponse {
   adult: boolean;
   backdrop_path: string | null;
   belongs_to_collection: TMDBCollection | null;
@@ -145,7 +145,7 @@ export class SearchService {
   async getMovieById(
     id: string | number,
     language?: string,
-  ): Promise<TMDBMovieDetails> {
+  ): Promise<TMDBMovieDetailsResponse> {
     const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
