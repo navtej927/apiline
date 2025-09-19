@@ -18,7 +18,17 @@
     "format": "pnpm -r format",
     "clean": "pnpm -r clean",
     "install:all": "pnpm install",
-    "update:all": "pnpm update -r"
+    "update:all": "pnpm update -r",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:up:detached": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --rmi all",
+    "docker:prod:build": "docker-compose -f docker-compose.prod.yml build",
+    "docker:prod:up": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
+    "docker:prod:logs": "docker-compose -f docker-compose.prod.yml logs -f"
   },
   "repository": {
     "type": "git",
@@ -36,7 +46,7 @@
     "@types/node": "^20.0.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
   }
 }
