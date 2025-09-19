@@ -48,7 +48,6 @@ export class ReviewsService {
     page = 1,
     language?: string,
   ): Promise<TMDBReviewsResponse> {
-    console.log(movieId);
     if (!movieId) {
       throw new BadRequestException('Movie ID must not be empty');
     }
