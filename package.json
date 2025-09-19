@@ -5,10 +5,20 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
+    "start": "pnpm -r start",
+    "start:dev": "pnpm -r start:dev",
+    "start:prod": "pnpm -r start:prod",
+    "dev": "pnpm -r start:dev",
     "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "test:cov": "pnpm -r test:cov",
+    "test:e2e": "pnpm -r test:e2e",
     "lint": "pnpm -r lint",
-    "dev": "pnpm -r dev",
-    "clean": "pnpm -r clean"
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
+    "clean": "pnpm -r clean",
+    "install:all": "pnpm install",
+    "update:all": "pnpm update -r"
   },
   "repository": {
     "type": "git",
