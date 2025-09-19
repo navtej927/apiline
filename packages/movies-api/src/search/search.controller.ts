@@ -22,7 +22,6 @@ export class SearchController {
     @Query('id') id: string,
     @Query('language') language?: string,
   ) {
-    console.log("------->")
     return this.searchService.getMovieById(id, language);
   }
 }

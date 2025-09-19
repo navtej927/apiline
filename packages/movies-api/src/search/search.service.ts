@@ -1,7 +1,7 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
 
 export interface TMDBMovie {
   id: number;
@@ -91,26 +91,13 @@ export class SearchService {
   private readonly logger = new Logger(SearchService.name);
   private readonly baseUrl: string;
 
-  private getConfigValue(key: string): string | undefined {
-    try {
-      const value = this.config.get(key);
-      return typeof value === 'string' ? value : undefined;
-    } catch {
-      return undefined;
-    }
-  }
-
   constructor(
     private readonly http: HttpService,
     private readonly config: ConfigService,
   ) {
-    const configuredBaseUrl = this.getConfigValue('TMDB_BASE_URL');
     this.baseUrl =
-      configuredBaseUrl &&
-      typeof configuredBaseUrl === 'string' &&
-      configuredBaseUrl.length > 0
-        ? configuredBaseUrl
-        : 'https://api.themoviedb.org/3';
+      this.config.get<string>('TMDB_BASE_URL') ||
+      'https://api.themoviedb.org/3';
   }
 
   async searchMovies(
@@ -123,7 +110,7 @@ export class SearchService {
       throw new BadRequestException('Query must not be empty');
     }
 
-    const token = this.getConfigValue('TMDB_API_ACCESS_TOKEN');
+    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
     }
@@ -159,7 +146,7 @@ export class SearchService {
     id: string | number,
     language?: string,
   ): Promise<TMDBMovieDetails> {
-    const token = this.getConfigValue('TMDB_API_ACCESS_TOKEN');
+    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
     }
