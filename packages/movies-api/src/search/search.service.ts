@@ -2,6 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { MovieDto } from '../common/dto/movie.dto';
 
 export interface TMDBMovie {
   id: number;
@@ -172,5 +173,25 @@ export class SearchService {
       this.logger.error('TMDB get movie failed', { error: errorMessage });
       throw error instanceof Error ? error : new Error('TMDB get movie failed');
     }
+  }
+
+  /**
+   * Transform TMDB movie data to MovieDto
+   */
+  transformToMovieDto(
+    tmdbMovie: TMDBMovieDetailsResponse | TMDBMovie,
+  ): MovieDto {
+    return new MovieDto(
+      tmdbMovie.title,
+      tmdbMovie.release_date,
+      tmdbMovie.adult,
+    );
+  }
+
+  /**
+   * Transform array of TMDB movies to MovieDto array
+   */
+  transformToMovieDtos(tmdbMovies: TMDBMovie[]): MovieDto[] {
+    return tmdbMovies.map((movie) => this.transformToMovieDto(movie));
   }
 }

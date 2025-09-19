@@ -16,4 +16,6 @@ async function bootstrap() {
   console.log(`Movies API is running on: http://localhost:${port}`);
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  console.error('Failed to start Movies API:', error);
+});
