@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { MovieDto } from '../common/dto/movie.dto';
+import { MovieDetailsDto } from '../common/dto/movie-details.dto';
 
 export interface TMDBMovie {
   id: number;
@@ -194,5 +195,28 @@ export class SearchService {
    */
   transformToMovieDtos(tmdbMovies: TMDBMovie[]): MovieDto[] {
     return tmdbMovies.map((movie) => this.transformToMovieDto(movie));
+  }
+
+  /**
+   * Transform TMDB movie details response to MovieDetailsDto
+   */
+  transformToMovieDetailsDto(
+    tmdbMovie: TMDBMovieDetailsResponse,
+  ): MovieDetailsDto {
+    const movieDetailsDto = new MovieDetailsDto();
+    // Base MovieDto fields (inherited)
+    movieDetailsDto.id = tmdbMovie.id;
+    movieDetailsDto.title = tmdbMovie.title;
+    movieDetailsDto.release_date = tmdbMovie.release_date;
+    movieDetailsDto.adult = tmdbMovie.adult;
+
+    // Additional MovieDetailsDto fields
+    movieDetailsDto.imdb_id = tmdbMovie.imdb_id;
+    movieDetailsDto.overview = tmdbMovie.overview;
+    movieDetailsDto.runtime = tmdbMovie.runtime;
+    movieDetailsDto.vote_average = tmdbMovie.vote_average;
+    movieDetailsDto.vote_count = tmdbMovie.vote_count;
+    movieDetailsDto.tagline = tmdbMovie.tagline;
+    return movieDetailsDto;
   }
 }

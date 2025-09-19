@@ -2,6 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { MovieDto } from '../common/dto/movie.dto';
+import { MovieDetailsDto } from '../common/dto/movie-details.dto';
 
 @ApiTags('Movies')
 @Controller('search')
@@ -33,11 +34,17 @@ export class SearchController {
   }
 
   @Get('movie')
+  @ApiOperation({ summary: 'Get movie details by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detailed movie information including IMDb ID',
+    type: MovieDetailsDto,
+  })
   async getMovieById(
     @Query('id') id: string,
     @Query('language') language?: string,
-  ) {
+  ): Promise<MovieDetailsDto> {
     const response = await this.searchService.getMovieById(id, language);
-    return this.searchService.transformToMovieDto(response);
+    return this.searchService.transformToMovieDetailsDto(response);
   }
 }
