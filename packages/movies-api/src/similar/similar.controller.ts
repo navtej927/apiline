@@ -1,13 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SimilarService } from './similar.service';
 import { MovieDto } from '../common/dto/movie.dto';
+import { ApiSimilarMovies } from '../common/decorators/api-similar-movies.decorator';
 
 @ApiTags('Similar Movies')
 @Controller('similar')
@@ -15,37 +10,7 @@ export class SimilarController {
   constructor(private readonly similarService: SimilarService) {}
 
   @Get('movie/:movieId')
-  @ApiOperation({ summary: 'Get similar movies for a specific movie' })
-  @ApiParam({
-    name: 'movieId',
-    description: 'TMDB Movie ID',
-    example: '24428',
-  })
-  @ApiQuery({
-    name: 'page',
-    required: false,
-    description: 'Page number for pagination',
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'language',
-    required: false,
-    description: 'Language code for movies',
-    example: 'en-US',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of similar movies',
-    type: [MovieDto],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad request - invalid movie ID',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Movie not found',
-  })
+  @ApiSimilarMovies()
   async getSimilarMovies(
     @Param('movieId') movieId: string,
     @Query('page') page?: string,
