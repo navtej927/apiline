@@ -39,5 +39,13 @@ export class MovieDto {
   @IsBoolean()
   adult: boolean;
 
+  @ApiProperty({
+    description: 'Similar movies',
+    type: [MovieDto],
+    required: false,
+  })
+  similar_movie: MovieDto[];
+
+  @IsString()
   computedProperty: string;
 }

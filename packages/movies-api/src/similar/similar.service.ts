@@ -97,8 +97,6 @@ export class SimilarService {
     movieDto.title = tmdbMovie.title;
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
-    // Add computed property for similarity score simulation
-    (movieDto as any).computedProperty = 'similarityScore';
     return movieDto;
   }
 

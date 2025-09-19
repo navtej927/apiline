@@ -64,12 +64,6 @@ export class SimilarController {
       language,
     );
 
-    // Add computed similarity scores to each movie
-    result.movies.forEach((movie, index) => {
-      (movie as any).computedSimilarityScore = this.calculateSimilarityScore(index);
-      (movie as any).computedRank = index + 1;
-    });
-
     return result;
   }
 
