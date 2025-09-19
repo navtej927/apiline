@@ -1,17 +1,4 @@
-node_modules
- 
-# Ignore all environment files across the repo
-# Matches .env, .env.local, .env.development, etc. at root and in subfolders
+node_modules/
 .env
 .env.*
-**/.env
-**/.env.*
-
-# Ignore all .env.example files everywhere
-.env.example
-**/.env.example
-
-# Optional: ignore dotenv files used by some tools
-.envrc
-**/.envrc
-*
+dist/
