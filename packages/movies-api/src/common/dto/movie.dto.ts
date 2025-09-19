@@ -38,4 +38,6 @@ export class MovieDto {
   })
   @IsBoolean()
   adult: boolean;
+
+  computedProperty: string;
 }

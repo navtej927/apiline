@@ -30,7 +30,17 @@ export class SearchController {
       adult,
       language,
     );
-    return this.searchService.transformToMovieDtos(response.results);
+    const movies = this.searchService.transformToMovieDtos(response.results);
+    // Simulate expensive computation with 3-4 second delay
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.random() * 1000 + 3000),
+    );
+    // Add computed property to each movie
+    movies.forEach((movie) => {
+      movie.computedProperty = 'computedValue';
+    });
+
+    return movies;
   }
 
   @Get('movie')

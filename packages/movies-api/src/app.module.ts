@@ -4,6 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SearchModule } from './search/search.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SearchModule } from './search/search.module';
     }),
     HttpModule,
     SearchModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
