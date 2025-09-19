@@ -1,12 +1,20 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { MovieDto } from '../common/dto/movie.dto';
 
+@ApiTags('Movies')
 @Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get('movies')
+  @ApiOperation({ summary: 'Search for movies' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of movies matching the search query',
+    type: [MovieDto],
+  })
   async searchMoviesDto(
     @Query('q') q: string,
     @Query('page') page?: string,

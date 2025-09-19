@@ -181,11 +181,12 @@ export class SearchService {
   transformToMovieDto(
     tmdbMovie: TMDBMovieDetailsResponse | TMDBMovie,
   ): MovieDto {
-    return new MovieDto(
-      tmdbMovie.title,
-      tmdbMovie.release_date,
-      tmdbMovie.adult,
-    );
+    const movieDto = new MovieDto();
+    movieDto.id = tmdbMovie.id;
+    movieDto.title = tmdbMovie.title;
+    movieDto.release_date = tmdbMovie.release_date;
+    movieDto.adult = tmdbMovie.adult;
+    return movieDto;
   }
 
   /**
