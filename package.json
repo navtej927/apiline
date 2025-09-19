@@ -1,0 +1,32 @@
+{
+  "name": "apiline",
+  "version": "1.0.0",
+  "description": "A collection of API packages for various services",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "dev": "pnpm -r dev",
+    "clean": "pnpm -r clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/navtej927/apiline.git"
+  },
+  "keywords": ["api", "microservices", "pnpm", "workspace"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/navtej927/apiline/issues"
+  },
+  "homepage": "https://github.com/navtej927/apiline#readme",
+  "devDependencies": {
+    "typescript": "^5.2.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
