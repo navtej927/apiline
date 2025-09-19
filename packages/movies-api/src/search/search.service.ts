@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { MovieDto } from '../common/dto/movie.dto';
 import { MovieDetailsDto } from '../common/dto/movie-details.dto';
+import { SimilarService } from '../similar/similar.service';
 
 export interface TMDBMovie {
   id: number;
@@ -96,6 +97,7 @@ export class SearchService {
   constructor(
     private readonly http: HttpService,
     private readonly config: ConfigService,
+    private readonly similarService: SimilarService,
   ) {
     this.baseUrl =
       this.config.get<string>('TMDB_BASE_URL') ||
@@ -177,6 +179,79 @@ export class SearchService {
   }
 
   /**
+   * Enhanced search that includes similar movies for each result
+   */
+  async searchMoviesWithSimilar(
+    query: string,
+    page = 1,
+    includeAdult = false,
+    language?: string,
+    includeSimilar = false,
+    similarLimit = 3,
+  ): Promise<{
+    movies: MovieDto[];
+    page: number;
+    totalPages: number;
+    totalResults: number;
+    includedSimilar: boolean;
+  }> {
+    // Get basic search results
+    const searchResponse = await this.searchMovies(
+      query,
+      page,
+      includeAdult,
+      language,
+    );
+    
+    const movies = this.transformToMovieDtos(searchResponse.results);
+    
+    // Add computed property to each movie
+    movies.forEach((movie) => {
+      movie.computedProperty = 'searchResult';
+    });
+
+    // If similar movies requested, fetch them for each movie using existing service
+    if (includeSimilar && movies.length > 0) {
+      await this.populateSimilarMovies(movies, similarLimit);
+    }
+
+    return {
+      movies,
+      page: searchResponse.page,
+      totalPages: searchResponse.total_pages,
+      totalResults: searchResponse.total_results,
+      includedSimilar: includeSimilar,
+    };
+  }
+
+  /**
+   * Populate similar movies for each movie in the list using existing SimilarService
+   */
+  private async populateSimilarMovies(
+    movies: MovieDto[],
+    limit: number,
+  ): Promise<void> {
+    // Use Promise.allSettled to handle failures gracefully
+    const similarPromises = movies.map(async (movie) => {
+      try {
+        // Reuse existing similar service instead of duplicating logic
+        const similarResponse = await this.similarService.getSimilarMoviesEnhanced(
+          movie.id.toString(),
+          1,
+        );
+        
+        // Take only the requested number of similar movies
+        movie.similar_movie = similarResponse.results.slice(0, limit);
+      } catch (error) {
+        this.logger.warn(`Failed to fetch similar movies for ${movie.id}`, error);
+        movie.similar_movie = []; // Graceful fallback
+      }
+    });
+
+    await Promise.allSettled(similarPromises);
+  }
+
+  /**
    * Transform TMDB movie data to MovieDto
    */
   transformToMovieDto(
@@ -187,6 +262,8 @@ export class SearchService {
     movieDto.title = tmdbMovie.title;
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
+    movieDto.similar_movie = [];
+    movieDto.computedProperty = 'searchResult';
     return movieDto;
   }
 
