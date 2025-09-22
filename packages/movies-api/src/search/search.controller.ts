@@ -1,9 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { MovieDto } from '../common/dto/movie.dto';
-import { MovieDetailsDto } from '../common/dto/movie-details.dto';
 import { ApiSearchMovies } from '../common/decorators/api-search-movies.decorator';
+import { ApiSearchMovieById } from 'src/common/decorators/api-search-movie.decorator';
 
 @ApiTags('Movies')
 @Controller('search')
@@ -42,12 +42,7 @@ export class SearchController {
   }
 
   @Get('movie')
-  @ApiOperation({ summary: 'Get movie details by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Detailed movie information including IMDb ID',
-    type: MovieDetailsDto,
-  })
+  @ApiSearchMovieById()
   async searchMovie(
     @Query('id') id: string,
     @Query('language') language?: string,
