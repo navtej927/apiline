@@ -1,6 +1,9 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { TMDBSearchResponse } from 'src/search/search.service';
+import {
+  TMDBMovieDetailsResponse,
+  TMDBSearchResponse,
+} from 'src/search/search.service';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
@@ -57,6 +60,38 @@ export class TMDBService {
         error instanceof Error ? error.message : 'Unknown error';
       this.logger.error('TMDB search failed', { error: errorMessage });
       throw error instanceof Error ? error : new Error('TMDB search failed');
+    }
+  }
+
+  async getMovieById(
+    id: string | number,
+    language?: string,
+  ): Promise<TMDBMovieDetailsResponse> {
+    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
+    if (!token || typeof token !== 'string') {
+      throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
+    }
+
+    const url = `${this.baseUrl}/movie/${id}`;
+    const params: Record<string, string> = {};
+    if (language) params.language = language;
+
+    try {
+      const res = await firstValueFrom(
+        this.http.get(url, {
+          params,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+        }),
+      );
+      return res.data;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error('TMDB get movie failed', { error: errorMessage });
+      throw error instanceof Error ? error : new Error('TMDB get movie failed');
     }
   }
 }
