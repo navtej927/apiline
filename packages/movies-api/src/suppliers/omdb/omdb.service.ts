@@ -3,6 +3,42 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 
+// OMDB API response types
+export interface OMDBRating {
+  Source: string;
+  Value: string;
+}
+
+// By title or by ID responses have the same shape
+export interface OMDBMovieResponse {
+  Title: string;
+  Year: string;
+  Rated: string;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Awards: string;
+  Poster: string;
+  Ratings: OMDBRating[];
+  Metascore: string;
+  imdbRating: string;
+  imdbVotes: string;
+  imdbID: string;
+  Type: 'movie' | 'series' | 'episode';
+  DVD: string;
+  BoxOffice: string;
+  Production: string;
+  Website: string;
+  Response: 'True' | 'False';
+  Error?: string;
+}
+
 @Injectable()
 export class OMDBService {
   private readonly baseUrl: string;
@@ -15,7 +51,7 @@ export class OMDBService {
       this.config.get<string>('OMDB_BASE_URL') || 'https://www.omdbapi.com';
   }
 
-  async getMoviesByQuery(query: string): Promise<unknown> {
+  async getMoviesByQuery(query: string): Promise<OMDBMovieResponse> {
     if (!query || !query.trim()) {
       throw new BadRequestException('Query must not be empty');
     }
@@ -27,12 +63,12 @@ export class OMDBService {
 
     const url = `${this.baseUrl}/?t=${query}&apikey=${token}`;
     const res = await firstValueFrom(this.http.get(url));
-    return res.data as unknown;
+    return res.data as OMDBMovieResponse;
   }
 
-  async getMovieById(id: string | number): Promise<unknown> {
+  async getMovieById(id: string | number): Promise<OMDBMovieResponse> {
     const url = `${this.baseUrl}/?i=${id}`;
     const res = await firstValueFrom(this.http.get(url));
-    return res.data as unknown;
+    return res.data as OMDBMovieResponse;
   }
 }

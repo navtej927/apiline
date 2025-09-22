@@ -127,14 +127,10 @@ export class SearchService {
     moviesDto.forEach((movie) => {
       movie.content_type = 'TMDB';
     });
-    // If similar movies requested, fetch them for each movie using existing service
     if (includeSimilar && moviesDto.length > 0) {
-      await this.populateSimilarMovies(moviesDto, 3);
+      await this.populateSimilarMovies(moviesDto, similarLimit);
     }
-
     const omdbMoviesResponse = await this.omdbService.getMoviesByQuery(query);
-
-    console.log('----->', omdbMoviesResponse);
 
     return {
       movies: moviesDto,
