@@ -97,7 +97,7 @@ export class SimilarService {
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
     movieDto.similar_movie = []; // Initialize empty array
-    movieDto.computedProperty = 'similarMovie'; // Set computed property
+    movieDto.content_type = 'TMDB';
     return movieDto;
   }
 

@@ -47,5 +47,5 @@ export class MovieDto {
   similar_movie: MovieDto[];
 
   @IsString()
-  computedProperty: string;
+  content_type: string;
 }

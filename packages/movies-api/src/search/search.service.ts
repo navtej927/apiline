@@ -1,5 +1,8 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { TMDBService } from '../suppliers/tmdb/tmdb.service';
+import { SimilarService } from '../similar/similar.service';
+import { MovieDto } from 'src/common/dto/movie.dto';
+import { MovieDetailsDto } from 'src/common/dto/movie-details.dto';
 
 export interface TMDBMovie {
   id: number;
@@ -87,39 +90,13 @@ export interface TMDBSearchResponse {
 @Injectable()
 export class SearchService {
   private readonly logger = new Logger(SearchService.name);
-  private readonly baseUrl: string;
 
-  constructor(private readonly tmdbService: TMDBService) {}
+  constructor(
+    private readonly tmdbService: TMDBService,
+    private readonly similarService: SimilarService,
+  ) {}
 
   async searchMovies(
-    query: string,
-    page = 1,
-    includeAdult = false,
-    language?: string,
-  ): Promise<TMDBSearchResponse> {
-    if (!query || !query.trim()) {
-      throw new BadRequestException('Query must not be empty');
-    }
-    // Delegate to TMDBService
-    return this.tmdbService.getMoviesByQuery(
-      query,
-      page,
-      includeAdult,
-      language,
-    );
-  }
-
-  async searchMovie(
-    id: string | number,
-    language?: string,
-  ): Promise<TMDBMovieDetailsResponse> {
-    return this.tmdbService.getMovieById(id, language);
-  }
-
-  /**
-   * Enhanced search that includes similar movies for each result
-   */
-  async searchMoviesWithSimilar(
     query: string,
     page = 1,
     includeAdult = false,
@@ -133,33 +110,42 @@ export class SearchService {
     totalResults: number;
     includedSimilar: boolean;
   }> {
-    // Get basic search results
-    const searchResponse = await this.searchMovies(
+    if (!query || !query.trim()) {
+      throw new BadRequestException('Query must not be empty');
+    }
+    // Delegate to TMDBService
+    const moviesResponse = await this.tmdbService.getMoviesByQuery(
       query,
       page,
       includeAdult,
       language,
     );
 
-    const movies = this.transformToMovieDtos(searchResponse.results);
+    const moviesDto = this.transformToMovieDtos(moviesResponse.results);
 
-    // Add computed property to each movie
-    movies.forEach((movie) => {
-      movie.computedProperty = 'searchResult';
+    moviesDto.forEach((movie) => {
+      movie.content_type = 'TMDB';
     });
 
     // If similar movies requested, fetch them for each movie using existing service
-    if (includeSimilar && movies.length > 0) {
-      await this.populateSimilarMovies(movies, similarLimit);
+    if (includeSimilar && moviesDto.length > 0) {
+      await this.populateSimilarMovies(moviesDto, 3);
     }
 
     return {
-      movies,
-      page: searchResponse.page,
-      totalPages: searchResponse.total_pages,
-      totalResults: searchResponse.total_results,
+      movies: moviesDto,
+      page: moviesResponse.page,
+      totalPages: moviesResponse.total_pages,
+      totalResults: moviesResponse.total_results,
       includedSimilar: includeSimilar,
     };
+  }
+
+  async searchMovie(
+    id: string | number,
+    language?: string,
+  ): Promise<TMDBMovieDetailsResponse> {
+    return this.tmdbService.getMovieById(id, language);
   }
 
   /**
@@ -205,7 +191,7 @@ export class SearchService {
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
     movieDto.similar_movie = [];
-    movieDto.computedProperty = 'searchResult';
+    movieDto.content_type = 'TMDB';
     return movieDto;
   }
 
