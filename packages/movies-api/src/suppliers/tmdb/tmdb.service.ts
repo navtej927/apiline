@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { TMDBMovieDetailsResponse, TMDBSearchResponse } from './types';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { TMDBReviewsResponse } from 'src/reviews/reviews.service';
 
 @Injectable()
 export class TMDBService {
@@ -89,6 +90,51 @@ export class TMDBService {
         error instanceof Error ? error.message : 'Unknown error';
       this.logger.error('TMDB get movie failed', { error: errorMessage });
       throw error instanceof Error ? error : new Error('TMDB get movie failed');
+    }
+  }
+
+  async getMovieReviews(
+    movieId: string | number,
+    page = 1,
+    language?: string,
+  ): Promise<TMDBReviewsResponse> {
+    if (!movieId) {
+      throw new BadRequestException('Movie ID must not be empty');
+    }
+
+    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
+    if (!token || typeof token !== 'string') {
+      throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
+    }
+
+    const url = `${this.baseUrl}/movie/${movieId}/reviews?language=en-US&page=1`;
+    const params: Record<string, string | number> = {
+      page,
+    };
+    if (language) params.language = language;
+
+    try {
+      const res = await firstValueFrom(
+        this.http.get(url, {
+          params,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+        }),
+      );
+      return res.data as TMDBReviewsResponse;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error('TMDB reviews fetch failed', {
+        error: errorMessage,
+        movieId,
+        page,
+      });
+      throw error instanceof Error
+        ? error
+        : new Error('TMDB reviews fetch failed');
     }
   }
 }

@@ -1,8 +1,6 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
+import { Injectable } from '@nestjs/common';
 import { ReviewDto, ReviewAuthorDetailsDto } from '../common/dto/review.dto';
+import { TMDBService } from 'src/suppliers/tmdb/tmdb.service';
 
 export interface TMDBAuthorDetails {
   name: string;
@@ -31,61 +29,14 @@ export interface TMDBReviewsResponse {
 
 @Injectable()
 export class ReviewsService {
-  private readonly logger = new Logger(ReviewsService.name);
-  private readonly baseUrl: string;
-
-  constructor(
-    private readonly http: HttpService,
-    private readonly config: ConfigService,
-  ) {
-    this.baseUrl =
-      this.config.get<string>('TMDB_BASE_URL') ||
-      'https://api.themoviedb.org/3';
-  }
+  constructor(private readonly tmdbService: TMDBService) {}
 
   async getMovieReviews(
     movieId: string | number,
     page = 1,
     language?: string,
   ): Promise<TMDBReviewsResponse> {
-    if (!movieId) {
-      throw new BadRequestException('Movie ID must not be empty');
-    }
-
-    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
-    if (!token || typeof token !== 'string') {
-      throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
-    }
-
-    const url = `${this.baseUrl}/movie/${movieId}/reviews?language=en-US&page=1`;
-    const params: Record<string, string | number> = {
-      page,
-    };
-    if (language) params.language = language;
-
-    try {
-      const res = await firstValueFrom(
-        this.http.get(url, {
-          params,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-        }),
-      );
-      return res.data as TMDBReviewsResponse;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('TMDB reviews fetch failed', {
-        error: errorMessage,
-        movieId,
-        page,
-      });
-      throw error instanceof Error
-        ? error
-        : new Error('TMDB reviews fetch failed');
-    }
+    return this.tmdbService.getMovieReviews(movieId, page, language);
   }
 
   /**
