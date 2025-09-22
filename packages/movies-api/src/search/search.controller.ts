@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SearchService } from './search.service';
+import { SearchService, TMDBMovieDetailsResponse } from './search.service';
 import { MovieDto } from '../common/dto/movie.dto';
 import { MovieDetailsDto } from '../common/dto/movie-details.dto';
 import { ApiSearchMovies } from '../common/decorators/api-search-movies.decorator';
@@ -12,7 +12,7 @@ export class SearchController {
 
   @Get('movies')
   @ApiSearchMovies()
-  async searchMoviesDto(
+  async searchMovies(
     @Query('q') q: string,
     @Query('page') page?: string,
     @Query('includeAdult') includeAdult?: string,
@@ -53,11 +53,10 @@ export class SearchController {
     description: 'Detailed movie information including IMDb ID',
     type: MovieDetailsDto,
   })
-  async getMovieById(
+  async searchMovie(
     @Query('id') id: string,
     @Query('language') language?: string,
-  ): Promise<MovieDetailsDto> {
-    const response = await this.searchService.getMovieById(id, language);
-    return this.searchService.transformToMovieDetailsDto(response);
+  ): Promise<TMDBMovieDetailsResponse> {
+    return this.searchService.searchMovie(id, language);
   }
 }
