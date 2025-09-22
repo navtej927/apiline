@@ -3,6 +3,7 @@ import { TMDBService } from '../suppliers/tmdb/tmdb.service';
 import { SimilarService } from '../similar/similar.service';
 import { MovieDto } from 'src/common/dto/movie.dto';
 import { MovieDetailsDto } from 'src/common/dto/movie-details.dto';
+import { OMDBService } from 'src/suppliers/omdb/omdb.service';
 
 export interface TMDBMovie {
   id: number;
@@ -94,6 +95,7 @@ export class SearchService {
   constructor(
     private readonly tmdbService: TMDBService,
     private readonly similarService: SimilarService,
+    private readonly omdbService: OMDBService,
   ) {}
 
   async searchMovies(
@@ -114,29 +116,31 @@ export class SearchService {
       throw new BadRequestException('Query must not be empty');
     }
     // Delegate to TMDBService
-    const moviesResponse = await this.tmdbService.getMoviesByQuery(
+    const tmdbMoviesResponse = await this.tmdbService.getMoviesByQuery(
       query,
       page,
       includeAdult,
       language,
     );
 
-    const moviesDto = this.transformToMovieDtos(moviesResponse.results);
-
+    const moviesDto = this.transformToMovieDtos(tmdbMoviesResponse.results);
     moviesDto.forEach((movie) => {
       movie.content_type = 'TMDB';
     });
-
     // If similar movies requested, fetch them for each movie using existing service
     if (includeSimilar && moviesDto.length > 0) {
       await this.populateSimilarMovies(moviesDto, 3);
     }
 
+    const omdbMoviesResponse = await this.omdbService.getMoviesByQuery(query);
+
+    console.log('----->', omdbMoviesResponse);
+
     return {
       movies: moviesDto,
-      page: moviesResponse.page,
-      totalPages: moviesResponse.total_pages,
-      totalResults: moviesResponse.total_results,
+      page: tmdbMoviesResponse.page,
+      totalPages: tmdbMoviesResponse.total_pages,
+      totalResults: tmdbMoviesResponse.total_results,
       includedSimilar: includeSimilar,
     };
   }
