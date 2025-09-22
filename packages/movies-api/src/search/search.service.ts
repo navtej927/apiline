@@ -202,9 +202,9 @@ export class SearchService {
       includeAdult,
       language,
     );
-    
+
     const movies = this.transformToMovieDtos(searchResponse.results);
-    
+
     // Add computed property to each movie
     movies.forEach((movie) => {
       movie.computedProperty = 'searchResult';
@@ -235,15 +235,19 @@ export class SearchService {
     const similarPromises = movies.map(async (movie) => {
       try {
         // Reuse existing similar service instead of duplicating logic
-        const similarResponse = await this.similarService.getSimilarMoviesEnhanced(
-          movie.id.toString(),
-          1,
-        );
-        
+        const similarResponse =
+          await this.similarService.getSimilarMoviesEnhanced(
+            movie.id.toString(),
+            1,
+          );
+
         // Take only the requested number of similar movies
         movie.similar_movie = similarResponse.results.slice(0, limit);
       } catch (error) {
-        this.logger.warn(`Failed to fetch similar movies for ${movie.id}`, error);
+        this.logger.warn(
+          `Failed to fetch similar movies for ${movie.id}`,
+          error,
+        );
         movie.similar_movie = []; // Graceful fallback
       }
     });

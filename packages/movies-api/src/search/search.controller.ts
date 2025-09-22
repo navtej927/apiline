@@ -31,10 +31,10 @@ export class SearchController {
     const withSimilar = includeSimilar === 'true';
     const limit = similarLimit ? parseInt(similarLimit, 10) : 3;
 
-    // Simulate expensive computation with 3-4 second delay
-    await new Promise((resolve) =>
-      setTimeout(resolve, Math.random() * 1000 + 3000),
-    ); // 3-4 seconds
+    // // Simulate expensive computation with 3-4 second delay
+    // await new Promise((resolve) =>
+    //   setTimeout(resolve, Math.random() * 1000 + 3000),
+    // ); // 3-4 seconds
 
     return this.searchService.searchMoviesWithSimilar(
       q,
