@@ -1,9 +1,6 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import {
-  TMDBMovieDetailsResponse,
-  TMDBSearchResponse,
-} from 'src/search/search.service';
+import { TMDBMovieDetailsResponse, TMDBSearchResponse } from './types';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
@@ -54,7 +51,7 @@ export class TMDBService {
           },
         }),
       );
-      return res.data;
+      return res.data as TMDBSearchResponse;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';

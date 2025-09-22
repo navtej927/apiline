@@ -2,8 +2,13 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { TMDBService } from '../suppliers/tmdb/tmdb.service';
 import { SimilarService } from '../similar/similar.service';
 import { MovieDto } from 'src/common/dto/movie.dto';
-import { tmdbToMovieDto } from 'src/common/util/movie-mapping.util';
+import {
+  tmdbToMovieDto,
+  omdbToMovieDto,
+} from 'src/common/util/movie-mapping.util';
 import { OMDBService } from 'src/suppliers/omdb/omdb.service';
+import type { TMDBSearchResponse } from '../suppliers/tmdb/types';
+import type { OMDBMovieResponse } from 'src/suppliers/omdb/types';
 
 @Injectable()
 export class SearchService {
@@ -33,22 +38,28 @@ export class SearchService {
       throw new BadRequestException('Query must not be empty');
     }
     // Delegate to TMDBService
-    const tmdbMoviesResponse = await this.tmdbService.getMoviesByQuery(
-      query,
-      page,
-      includeAdult,
-      language,
-    );
+    const tmdbMoviesResponse: TMDBSearchResponse =
+      await this.tmdbService.getMoviesByQuery(
+        query,
+        page,
+        includeAdult,
+        language,
+      );
 
     const moviesDto = tmdbMoviesResponse.results.map(tmdbToMovieDto);
     if (includeSimilar && moviesDto.length > 0) {
       await this.populateSimilarMovies(moviesDto, similarLimit);
     }
-    const omdbMoviesResponse = await this.omdbService.getMoviesByQuery(query);
-    const omdbMoviesDto = omdbMoviesResponse.map(omdbToMovieDto);
+
+    const omdbMoviesResponse: OMDBMovieResponse =
+      await this.omdbService.getMoviesByQuery(query);
+
+    const omdbMovieDto = omdbToMovieDto(omdbMoviesResponse);
+
+    const allMovies = moviesDto.concat(omdbMovieDto);
 
     return {
-      movies: moviesDto.concat(omdbMoviesDto),
+      movies: allMovies,
       page: tmdbMoviesResponse.page,
       totalPages: tmdbMoviesResponse.total_pages,
       totalResults: tmdbMoviesResponse.total_results,

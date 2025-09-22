@@ -5,7 +5,7 @@ import {
   TMDBMovie,
   TMDBMovieDetailsResponse,
 } from '../../suppliers/tmdb/types';
-import type { OMDBMovieResponse } from '../../suppliers/omdb/omdb.service';
+import type { OMDBMovieResponse } from '../../suppliers/omdb/types';
 
 export function tmdbToMovieDto(
   tmdbMovie: TMDBMovie | TMDBMovieDetailsResponse,

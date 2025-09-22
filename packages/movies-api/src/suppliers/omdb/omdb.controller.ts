@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { OMDBService, OMDBMovieResponse } from './omdb.service';
+import { OMDBService } from './omdb.service';
+import { OMDBMovieResponse } from './types';
 
 @Controller('omdb')
 export class OMDBController {
