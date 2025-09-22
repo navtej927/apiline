@@ -56,18 +56,12 @@ export class ReviewsController {
     totalPages: number;
     totalResults: number;
   }> {
-    console.log('controller', movieId);
     const p = page ? parseInt(page, 10) : 1;
     const response = await this.reviewsService.getMovieReviews(
       movieId,
       p,
       language,
     );
-
-    // Add some delay to simulate expensive processing (similar to your search)
-    await new Promise((resolve) =>
-      setTimeout(resolve, Math.random() * 1000 + 2000),
-    ); // 2-3 seconds
 
     const reviews = this.reviewsService.transformToReviewDtos(response.results);
 
