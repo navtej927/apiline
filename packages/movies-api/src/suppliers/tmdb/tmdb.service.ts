@@ -1,10 +1,10 @@
-import { BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { TMDBSearchResponse } from 'src/search/search.service';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
+@Injectable()
 export class TMDBService {
   private readonly logger = new Logger(TMDBService.name);
   private readonly baseUrl: string;

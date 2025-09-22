@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { MovieDto } from '../common/dto/movie.dto';
 import { MovieDetailsDto } from '../common/dto/movie-details.dto';
 import { SimilarService } from '../similar/similar.service';
+import { TMDBService } from '../suppliers/tmdb/tmdb.service';
 
 export interface TMDBMovie {
   id: number;
@@ -98,6 +99,7 @@ export class SearchService {
     private readonly http: HttpService,
     private readonly config: ConfigService,
     private readonly similarService: SimilarService,
+    private readonly tmdbService: TMDBService,
   ) {
     this.baseUrl =
       this.config.get<string>('TMDB_BASE_URL') ||
@@ -113,37 +115,13 @@ export class SearchService {
     if (!query || !query.trim()) {
       throw new BadRequestException('Query must not be empty');
     }
-
-    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
-    if (!token || typeof token !== 'string') {
-      throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
-    }
-
-    const url = `${this.baseUrl}/search/movie`;
-    const params: Record<string, string | number | boolean> = {
+    // Delegate to TMDBService
+    return this.tmdbService.getMoviesByQuery(
       query,
       page,
-      include_adult: includeAdult,
-    };
-    if (language) params.language = language;
-
-    try {
-      const res = await firstValueFrom(
-        this.http.get(url, {
-          params,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-        }),
-      );
-      return res.data;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('TMDB search failed', { error: errorMessage });
-      throw error instanceof Error ? error : new Error('TMDB search failed');
-    }
+      includeAdult,
+      language,
+    );
   }
 
   async getMovieById(

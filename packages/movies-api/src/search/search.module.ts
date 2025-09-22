@@ -3,9 +3,10 @@ import { HttpModule } from '@nestjs/axios';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 import { SimilarModule } from '../similar/similar.module';
+import { TMDBModule } from '../suppliers/tmdb/tmdb.module';
 
 @Module({
-  imports: [HttpModule, SimilarModule],
+  imports: [HttpModule, SimilarModule, TMDBModule],
   controllers: [SearchController],
   providers: [SearchService],
   exports: [SearchService],
