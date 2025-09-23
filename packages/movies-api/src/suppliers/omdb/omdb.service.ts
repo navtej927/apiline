@@ -12,8 +12,7 @@ export class OMDBService {
     private readonly config: ConfigService,
     private readonly http: HttpService,
   ) {
-    this.baseUrl =
-      this.config.get<string>('OMDB_BASE_URL') || 'https://www.omdbapi.com';
+    this.baseUrl = this.config.get<string>('externalApis.omdb.baseUrl')!;
   }
 
   async getMoviesByQuery(query: string): Promise<OMDBMovieResponse> {
@@ -21,7 +20,7 @@ export class OMDBService {
       throw new BadRequestException('Query must not be empty');
     }
 
-    const token = this.config.get<string>('OMDB_API_KEY');
+    const token = this.config.get<string>('externalApis.omdb.apiKey');
     if (!token || typeof token !== 'string') {
       throw new Error('OMDB_API_KEY is not configured');
     }
@@ -32,7 +31,12 @@ export class OMDBService {
   }
 
   async getMovieById(id: string | number): Promise<OMDBMovieResponse> {
-    const url = `${this.baseUrl}/?i=${id}`;
+    const token = this.config.get<string>('externalApis.omdb.apiKey');
+    if (!token || typeof token !== 'string') {
+      throw new Error('OMDB_API_KEY is not configured');
+    }
+
+    const url = `${this.baseUrl}/?i=${id}&apikey=${token}`;
     const res = await firstValueFrom(this.http.get(url));
     return res.data as OMDBMovieResponse;
   }

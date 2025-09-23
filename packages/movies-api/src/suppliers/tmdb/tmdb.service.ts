@@ -14,9 +14,7 @@ export class TMDBService {
     private readonly config: ConfigService,
     private readonly http: HttpService,
   ) {
-    this.baseUrl =
-      this.config.get<string>('TMDB_BASE_URL') ||
-      'https://api.themoviedb.org/3';
+    this.baseUrl = this.config.get<string>('externalApis.tmdb.baseUrl')!;
   }
 
   async getMoviesByQuery({
@@ -29,7 +27,7 @@ export class TMDBService {
       throw new BadRequestException('Query must not be empty');
     }
 
-    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
+    const token = this.config.get<string>('externalApis.tmdb.apiAccessToken');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
     }
@@ -65,7 +63,7 @@ export class TMDBService {
     id: string | number,
     language?: string,
   ): Promise<TMDBMovieDetailsResponse> {
-    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
+    const token = this.config.get<string>('externalApis.tmdb.apiAccessToken');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
     }
@@ -102,7 +100,7 @@ export class TMDBService {
       throw new BadRequestException('Movie ID must not be empty');
     }
 
-    const token = this.config.get<string>('TMDB_API_ACCESS_TOKEN');
+    const token = this.config.get<string>('externalApis.tmdb.apiAccessToken');
     if (!token || typeof token !== 'string') {
       throw new Error('TMDB_API_ACCESS_TOKEN is not configured');
     }

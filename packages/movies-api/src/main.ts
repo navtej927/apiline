@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,7 +11,8 @@ async function bootstrap() {
   // Set global prefix
   app.setGlobalPrefix('api');
 
-  const port = process.env.PORT || 3001;
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('app.port') || 3001;
   await app.listen(port, '0.0.0.0');
 
   console.log(`Movies API is running on: http://localhost:${port}`);
