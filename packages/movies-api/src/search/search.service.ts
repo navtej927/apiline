@@ -37,14 +37,13 @@ export class SearchService {
     if (!query || !query.trim()) {
       throw new BadRequestException('Query must not be empty');
     }
-    // Delegate to TMDBService
     const tmdbMoviesResponse: TMDBSearchResponse =
-      await this.tmdbService.getMoviesByQuery(
+      await this.tmdbService.getMoviesByQuery({
         query,
         page,
         includeAdult,
         language,
-      );
+      });
 
     const moviesDto = tmdbMoviesResponse.results.map(tmdbToMovieDto);
     if (includeSimilar && moviesDto.length > 0) {

@@ -19,13 +19,13 @@ export class TMDBService {
       'https://api.themoviedb.org/3';
   }
 
-  async getMoviesByQuery(
-    query: string,
-    page = 1,
-    includeAdult = false,
-    language?: string,
-  ): Promise<TMDBSearchResponse> {
-    if (!query || !query.trim()) {
+  async getMoviesByQuery({
+    query,
+    page,
+    includeAdult,
+    language,
+  }): Promise<TMDBSearchResponse> {
+    if (!query || typeof query !== 'string' || !query.trim()) {
       throw new BadRequestException('Query must not be empty');
     }
 

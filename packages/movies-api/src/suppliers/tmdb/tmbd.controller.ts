@@ -6,7 +6,17 @@ export class TMDBController {
   constructor(private readonly tmdbService: TMDBService) {}
 
   @Get('search')
-  async search(@Query('q') query: string) {
-    return this.tmdbService.getMoviesByQuery(query);
+  async search(
+    @Query('q') query: string,
+    @Query('language') language: string,
+    @Query('includeAdult') includeAdult: boolean,
+    @Query('page') page: number,
+  ) {
+    return this.tmdbService.getMoviesByQuery({
+      query,
+      page,
+      includeAdult,
+      language,
+    });
   }
 }
