@@ -1,8 +1,13 @@
 import { ConfigService } from '@nestjs/config';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { OMDBMovieResponse } from './types';
+import {
+  ExternalApiException,
+  ExternalApiConfigurationException,
+  InvalidSearchQueryException,
+} from '../../exceptions';
 
 @Injectable()
 export class OMDBService {
@@ -17,12 +22,12 @@ export class OMDBService {
 
   async getMoviesByQuery(query: string): Promise<OMDBMovieResponse> {
     if (!query || !query.trim()) {
-      throw new BadRequestException('Query must not be empty');
+      throw new InvalidSearchQueryException(query, 'Query must not be empty');
     }
 
     const token = this.config.get<string>('externalApis.omdb.apiKey');
     if (!token || typeof token !== 'string') {
-      throw new Error('OMDB_API_KEY is not configured');
+      throw new ExternalApiConfigurationException('OMDB', 'OMDB_API_KEY');
     }
 
     const url = `${this.baseUrl}/?t=${query}&apikey=${token}`;
@@ -33,11 +38,19 @@ export class OMDBService {
   async getMovieById(id: string | number): Promise<OMDBMovieResponse> {
     const token = this.config.get<string>('externalApis.omdb.apiKey');
     if (!token || typeof token !== 'string') {
-      throw new Error('OMDB_API_KEY is not configured');
+      throw new ExternalApiConfigurationException('OMDB', 'OMDB_API_KEY');
     }
 
-    const url = `${this.baseUrl}/?i=${id}&apikey=${token}`;
-    const res = await firstValueFrom(this.http.get(url));
-    return res.data as OMDBMovieResponse;
+    try {
+      const url = `${this.baseUrl}/?i=${id}&apikey=${token}`;
+      const res = await firstValueFrom(this.http.get(url));
+      return res.data as OMDBMovieResponse;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new ExternalApiException('OMDB request failed', 'OMDB', undefined, {
+        movieId: id,
+        originalError: errorMessage,
+      });
+    }
   }
 }
