@@ -4,6 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { SearchModule } from './search/search.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { SimilarModule } from './similar/similar.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SimilarModule } from './similar/similar.module';
     SearchModule,
     ReviewsModule,
     SimilarModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
