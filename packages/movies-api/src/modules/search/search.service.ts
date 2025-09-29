@@ -1,14 +1,14 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import { TMDBService } from '../suppliers/tmdb/tmdb.service';
-import { SimilarService } from '../similar/similar.service';
-import { MovieDto } from 'src/common/dto/movie.dto';
+import { TMDBService } from '@src/modules/suppliers/tmdb/tmdb.service';
+import { SimilarService } from '@src/modules/similar/similar.service';
+import { MovieDto } from '@src/common/dto/movie.dto';
 import {
   tmdbToMovieDto,
   omdbToMovieDto,
-} from 'src/common/util/movie-mapping.util';
-import type { TMDBSearchResponse } from '../suppliers/tmdb/types';
-import type { OMDBMovieResponse } from '../suppliers/omdb/types';
-import { OMDBService } from '../suppliers/omdb/omdb.service';
+} from '@src/common/util/movie-mapping.util';
+import type { TMDBSearchResponse } from '@src/modules/suppliers/tmdb/types';
+import type { OMDBMovieResponse } from '@src/modules/suppliers/omdb/types';
+import { OMDBService } from '@src/modules/suppliers/omdb/omdb.service';
 
 @Injectable()
 export class SearchService {

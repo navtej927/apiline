@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { TMDBMovieDetailsResponse, TMDBSearchResponse } from './types';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { TMDBReviewsResponse } from 'src/modules/reviews/reviews.service';
+import { TMDBReviewsResponse } from '@src/modules/reviews/reviews.service';
 import {
   ExternalApiException,
   ExternalApiTimeoutException,

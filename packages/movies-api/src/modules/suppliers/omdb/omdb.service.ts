@@ -2,12 +2,12 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { OMDBMovieResponse } from './types';
+import { OMDBMovieResponse } from '@src/modules/suppliers/omdb/types';
 import {
   ExternalApiException,
   ExternalApiConfigurationException,
   InvalidSearchQueryException,
-} from 'src/exceptions';
+} from '@src/exceptions';
 
 @Injectable()
 export class OMDBService {

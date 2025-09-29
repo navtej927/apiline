@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { TMDBService } from './tmdb.service';
+import { TMDBService } from '@src/modules/suppliers/tmdb/tmdb.service';
 
 @Module({
   imports: [HttpModule],

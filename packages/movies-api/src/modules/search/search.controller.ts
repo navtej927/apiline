@@ -1,9 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SearchService } from './search.service';
-import { MovieDto } from 'src/common/dto/movie.dto';
-import { ApiSearchMovies } from 'src/common/decorators/api-search-movies.decorator';
-import { ApiSearchMovieById } from 'src/common/decorators/api-search-movie.decorator';
+import { MovieDto } from '@src/common/dto/movie.dto';
+import { ApiSearchMovies } from '@src/common/decorators/api-search-movies.decorator';
+import { ApiSearchMovieById } from '@src/common/decorators/api-search-movie.decorator';
 
 @ApiTags('Movies')
 @Controller('search')

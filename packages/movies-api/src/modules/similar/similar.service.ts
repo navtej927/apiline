@@ -2,7 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { MovieDto } from 'src/common/dto/movie.dto';
+import { MovieDto } from '@src/common/dto/movie.dto';
 
 export interface TMDBSimilarMovie {
   id: number;

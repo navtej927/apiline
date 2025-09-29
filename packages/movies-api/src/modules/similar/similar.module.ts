@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { SimilarController } from './similar.controller';
-import { SimilarService } from './similar.service';
+import { SimilarController } from '@src/modules/similar/similar.controller';
+import { SimilarService } from '@src/modules/similar/similar.service';
 
 @Module({
   imports: [HttpModule],
