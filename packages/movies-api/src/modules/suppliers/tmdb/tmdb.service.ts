@@ -3,13 +3,13 @@ import { firstValueFrom } from 'rxjs';
 import { TMDBMovieDetailsResponse, TMDBSearchResponse } from './types';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { TMDBReviewsResponse } from 'src/reviews/reviews.service';
+import { TMDBReviewsResponse } from 'src/modules/reviews/reviews.service';
 import {
   ExternalApiException,
   ExternalApiTimeoutException,
   ExternalApiConfigurationException,
   InvalidSearchQueryException,
-} from '../../exceptions';
+} from 'src/exceptions';
 
 @Injectable()
 export class TMDBService {

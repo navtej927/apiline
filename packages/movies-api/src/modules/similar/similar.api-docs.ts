@@ -1,5 +1,5 @@
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
-import { MovieDto } from '../common/dto/movie.dto';
+import { MovieDto } from 'src/common/dto/movie.dto';
 
 export const SimilarMoviesApiDocs = {
   getSimilarMovies: {

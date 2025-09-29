@@ -2,7 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { MovieDto } from '../common/dto/movie.dto';
+import { MovieDto } from 'src/common/dto/movie.dto';
 
 export interface TMDBSimilarMovie {
   id: number;
@@ -96,7 +96,7 @@ export class SimilarService {
     movieDto.title = tmdbMovie.title;
     movieDto.release_date = tmdbMovie.release_date;
     movieDto.adult = tmdbMovie.adult;
-    movieDto.similar_movie = []; // Initialize empty array
+    movieDto.similar_movies = []; // Initialize empty array
     movieDto.content_type = 'TMDB';
     return movieDto;
   }

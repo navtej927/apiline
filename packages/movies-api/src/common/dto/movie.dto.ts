@@ -44,7 +44,7 @@ export class MovieDto {
     type: [MovieDto],
     required: false,
   })
-  similar_movie: MovieDto[];
+  similar_movies: MovieDto[];
 
   @IsString()
   content_type: string;

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
-import { TMDBService } from 'src/suppliers/tmdb/tmdb.service';
+import { TMDBService } from 'src/modules/suppliers/tmdb/tmdb.service';
 
 @Module({
   imports: [HttpModule],

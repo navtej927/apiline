@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SimilarService } from './similar.service';
-import { MovieDto } from '../common/dto/movie.dto';
-import { ApiSimilarMovies } from '../common/decorators/api-similar-movies.decorator';
+import { MovieDto } from 'src/common/dto/movie.dto';
+import { ApiSimilarMovies } from 'src/common/decorators/api-similar-movies.decorator';
 
 @ApiTags('Similar Movies')
 @Controller('similar')

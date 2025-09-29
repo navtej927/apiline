@@ -6,9 +6,9 @@ import {
   tmdbToMovieDto,
   omdbToMovieDto,
 } from 'src/common/util/movie-mapping.util';
-import { OMDBService } from 'src/suppliers/omdb/omdb.service';
 import type { TMDBSearchResponse } from '../suppliers/tmdb/types';
-import type { OMDBMovieResponse } from 'src/suppliers/omdb/types';
+import type { OMDBMovieResponse } from '../suppliers/omdb/types';
+import { OMDBService } from '../suppliers/omdb/omdb.service';
 
 @Injectable()
 export class SearchService {
@@ -88,13 +88,13 @@ export class SearchService {
           );
 
         // Take only the requested number of similar movies
-        movie.similar_movie = similarResponse.results.slice(0, limit);
+        movie.similar_movies = similarResponse.results.slice(0, limit);
       } catch (error) {
         this.logger.warn(
           `Failed to fetch similar movies for ${movie.id}`,
           error,
         );
-        movie.similar_movie = []; // Graceful fallback
+        movie.similar_movies = []; // Graceful fallback
       }
     });
 

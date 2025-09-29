@@ -7,7 +7,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ReviewsService } from './reviews.service';
-import { ReviewDto } from '../common/dto/review.dto';
+import { ReviewDto } from 'src/common/dto/review.dto';
 
 @ApiTags('Reviews')
 @Controller('reviews')

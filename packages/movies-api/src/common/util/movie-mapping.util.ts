@@ -4,8 +4,8 @@ import { MovieDetailsDto } from '../dto/movie-details.dto';
 import {
   TMDBMovie,
   TMDBMovieDetailsResponse,
-} from '../../suppliers/tmdb/types';
-import type { OMDBMovieResponse } from '../../suppliers/omdb/types';
+} from '../../modules/suppliers/tmdb/types';
+import type { OMDBMovieResponse } from '../../modules/suppliers/omdb/types';
 
 export function tmdbToMovieDto(
   tmdbMovie: TMDBMovie | TMDBMovieDetailsResponse,
@@ -15,7 +15,7 @@ export function tmdbToMovieDto(
   movieDto.title = tmdbMovie.title;
   movieDto.release_date = tmdbMovie.release_date;
   movieDto.adult = tmdbMovie.adult;
-  movieDto.similar_movie = [];
+  movieDto.similar_movies = [];
   movieDto.content_type = 'TMDB';
   return movieDto;
 }
@@ -48,7 +48,7 @@ export function omdbToMovieDto(omdb: OMDBMovieResponse): MovieDto {
     : d.toISOString().slice(0, 10);
   movieDto.title = omdb.Title;
   movieDto.adult = false;
-  movieDto.similar_movie = [];
+  movieDto.similar_movies = [];
   movieDto.content_type = 'OMDB';
   return movieDto;
 }

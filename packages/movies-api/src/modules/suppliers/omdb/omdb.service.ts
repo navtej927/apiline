@@ -7,7 +7,7 @@ import {
   ExternalApiException,
   ExternalApiConfigurationException,
   InvalidSearchQueryException,
-} from '../../exceptions';
+} from 'src/exceptions';
 
 @Injectable()
 export class OMDBService {
