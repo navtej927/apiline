@@ -10,6 +10,6 @@ import { OMDBModule } from '@src/modules/suppliers/omdb/omdb.module';
   imports: [HttpModule, SimilarModule, TMDBModule, OMDBModule],
   controllers: [SearchController],
   providers: [SearchService],
-  exports: [SearchService],
+  exports: [],
 })
 export class SearchModule {}
