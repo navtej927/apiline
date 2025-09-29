@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ReviewDto, ReviewAuthorDetailsDto } from 'src/common/dto/review.dto';
-import { TMDBService } from 'src/modules/suppliers/tmdb/tmdb.service';
+import { ReviewDto, ReviewAuthorDetailsDto } from '@src/common/dto/review.dto';
+import { TMDBService } from '@src/modules/suppliers/tmdb/tmdb.service';
 
 export interface TMDBAuthorDetails {
   name: string;

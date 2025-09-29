@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { SearchModule } from './modules/search/search.module';
-import { ReviewsModule } from './modules/reviews/reviews.module';
-import { SimilarModule } from './modules/similar/similar.module';
-import { HealthModule } from './modules/health/health.module';
-import { appConfig, externalApisConfig, validate } from './config';
+import { SearchModule } from '@src/modules/search/search.module';
+import { ReviewsModule } from '@src/modules/reviews/reviews.module';
+import { SimilarModule } from '@src/modules/similar/similar.module';
+import { HealthModule } from '@src/modules/health/health.module';
+import { appConfig, externalApisConfig, validate } from '@src/config';
 
 @Module({
   imports: [
