@@ -1,10 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { MoviesResponseDTO } from '../../modules/search/dto/movies-response-dto';
 
-/**
- * Custom decorator for Search Movies API endpoint
- * Combines all Swagger decorators for movie search with optional similar movies
- */
 export function ApiSearchMovies() {
   return applyDecorators(
     ApiOperation({
@@ -64,36 +61,7 @@ export function ApiSearchMovies() {
     ApiResponse({
       status: 200,
       description: 'Search results with optional similar movies',
-      schema: {
-        type: 'object',
-        properties: {
-          movies: {
-            type: 'array',
-            items: { $ref: '#/components/schemas/MovieDto' },
-            description: 'Array of movies matching the search query',
-          },
-          page: {
-            type: 'number',
-            example: 1,
-            description: 'Current page number',
-          },
-          totalPages: {
-            type: 'number',
-            example: 5,
-            description: 'Total number of pages available',
-          },
-          totalResults: {
-            type: 'number',
-            example: 100,
-            description: 'Total number of movies found',
-          },
-          includedSimilar: {
-            type: 'boolean',
-            example: true,
-            description: 'Whether similar movies were included in the response',
-          },
-        },
-      },
+      type: MoviesResponseDTO,
     }),
 
     ApiResponse({

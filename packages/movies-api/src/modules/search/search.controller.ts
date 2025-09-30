@@ -12,7 +12,7 @@ export class SearchController {
 
   @Get('movies')
   @ApiSearchMovies()
-  async searchMovies(
+  searchMovies(
     @Query('q') q: string,
     @Query('page') page?: string,
     @Query('includeAdult') includeAdult?: string,
@@ -25,7 +25,7 @@ export class SearchController {
     const withSimilar = includeSimilar === 'true';
     const limit = similarLimit ? parseInt(similarLimit, 10) : 3;
 
-    return await this.searchService.searchMovies(
+    return this.searchService.searchMovies(
       q,
       p,
       adult,
