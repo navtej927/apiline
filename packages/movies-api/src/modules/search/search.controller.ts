@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SearchService } from '@src/modules/search/search.service';
-import { MovieDto } from '@src/common/dto/movie.dto';
+import { MoviesResponseDTO } from '@src/modules/search/dto/movies-response-dto';
 import { ApiSearchMovies } from '@src/common/decorators/api-search-movies.decorator';
 import { ApiSearchMovieById } from '@src/common/decorators/api-search-movie.decorator';
 
@@ -19,19 +19,13 @@ export class SearchController {
     @Query('language') language?: string,
     @Query('includeSimilar') includeSimilar?: string,
     @Query('similarLimit') similarLimit?: string,
-  ): Promise<{
-    movies: MovieDto[];
-    page: number;
-    totalPages: number;
-    totalResults: number;
-    includedSimilar: boolean;
-  }> {
+  ): Promise<MoviesResponseDTO> {
     const p = page ? parseInt(page, 10) : 1;
     const adult = includeAdult === 'true';
     const withSimilar = includeSimilar === 'true';
     const limit = similarLimit ? parseInt(similarLimit, 10) : 3;
 
-    return this.searchService.searchMovies(
+    return await this.searchService.searchMovies(
       q,
       p,
       adult,
